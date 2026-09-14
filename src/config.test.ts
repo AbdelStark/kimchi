@@ -814,7 +814,7 @@ describe("permissions", () => {
 		expect(mode).toBe(0o600)
 	})
 
-	it("writeConfigObject (via writeApiKey) chmods even when pre-existing file is loose", () => {
+	it("writeApiKey tightens a loose pre-existing config.json to 0600", () => {
 		writeFileSync(configPath, JSON.stringify({ apiKey: "old" }), { mode: 0o644 })
 		chmodSync(configPath, 0o644)
 		expect(statSync(configPath).mode & 0o777).toBe(0o644)
