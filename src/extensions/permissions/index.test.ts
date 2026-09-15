@@ -757,7 +757,7 @@ describe("plan mode assumption detection", () => {
 		expect(ctx.ui.select).toHaveBeenCalled()
 	})
 
-	it("review menu offers Execute / Rework / Start as ferment", async () => {
+	it("review menu offers Execute / Rework / Start as ferment / Start execution in remote session", async () => {
 		const harness = createPermissionsHarness(["read", "bash"], { plan: true })
 		await harness.fire("session_start", {}, createMockContext([]))
 
@@ -768,11 +768,32 @@ describe("plan mode assumption detection", () => {
 
 		expect(ctx.ui.select).toHaveBeenCalledWith(
 			"Plan complete. How would you like to proceed?",
-			["Execute the plan locally", "Rework the plan", "Start as ferment"],
+			["Execute the plan locally", "Execute the plan in a remote workspace", "Rework the plan", "Start as ferment"],
 			expect.anything(),
 		)
 		expect(harness.pi.sendMessage).not.toHaveBeenCalled()
 		expect(getPermissionMode(TEST_SESSION_ID)).toEqual({ mode: "plan", source: "flag", initiatedBy: "user" })
+	})
+
+	it("review menu drops the cloud option when remote run is disabled via KIMCHI_REMOTE_RUN=0", async () => {
+		vi.stubEnv("KIMCHI_REMOTE_RUN", "0")
+		try {
+			const harness = createPermissionsHarness(["read", "bash"], { plan: true })
+			await harness.fire("session_start", {}, createMockContext([]))
+
+			const planText =
+				"# Plan\n\n## Goal\nAdd caching layer.\n\n## Chunks\n- Chunk 1\nImplement cache.\n\n## Verification\nRun tests."
+			const ctx = createMockContext(["Execute the plan"])
+			await submitPlan(harness, planText, ctx)
+
+			expect(ctx.ui.select).toHaveBeenCalledWith(
+				"Plan complete. How would you like to proceed?",
+				["Execute the plan locally", "Rework the plan", "Start as ferment"],
+				expect.anything(),
+			)
+		} finally {
+			vi.unstubAllEnvs()
+		}
 	})
 
 	it("oneshot sessions skip the plan-complete dropdown entirely", async () => {
