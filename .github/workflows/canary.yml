@@ -83,6 +83,12 @@ jobs:
       - name: Check (lint + type check)
         run: pnpm run check
 
+      # Strict-XML gate for the codesign entitlements (AMFI rejects what
+      # lenient plutil accepts, e.g. "--" inside comments) — fail fast here
+      # instead of mid-build on a macOS runner. See release.yml.
+      - name: Validate entitlements plist (strict XML)
+        run: python3 -c "import plistlib; plistlib.load(open('build/entitlements.mac.plist', 'rb'))"
+
       - name: Test
         run: pnpm run test
 
@@ -143,6 +149,15 @@ jobs:
 
       - name: Set version
         run: node scripts/set-version.js "${{ needs.preflight.outputs.version }}"
+
+      # Imports the Developer ID cert into a throwaway keychain and exports
+      # CSC_NAME for the build step (no-op without the secrets → ad-hoc).
+      - name: Set up Developer ID signing
+        if: ${{ matrix.os == 'darwin' }}
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash scripts/setup-codesign.sh
 
       - name: Build binary
         if: ${{ matrix.os != 'windows' }}
