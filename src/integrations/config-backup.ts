@@ -10,7 +10,10 @@ export function backupToolConfig(path: string): string | undefined {
 		original = readFileSync(path)
 	} catch (error) {
 		if (error instanceof Error && "code" in error && error.code === "ENOENT") return undefined
-		throw error
+		const code = error instanceof Error && "code" in error && typeof error.code === "string" ? ` (${error.code})` : ""
+		throw new Error(`Could not read ${path} to create a backup${code}. No configuration changes written.`, {
+			cause: error,
+		})
 	}
 
 	// Exclusive creation never replaces an earlier backup, even on repeated setup.
@@ -19,9 +22,10 @@ export function backupToolConfig(path: string): string | undefined {
 	try {
 		writeFileSync(backup, original, { flag: "wx", mode: 0o600 })
 	} catch (error) {
-		throw new Error(`Could not create backup for ${path}: ${error instanceof Error ? error.message : "write failed"}`, {
-			cause: error,
-		})
+		throw new Error(
+			`Could not create backup for ${path}: ${error instanceof Error ? error.message : "write failed"}. No configuration changes written.`,
+			{ cause: error },
+		)
 	}
 	log.info(`Backup saved: ${backup}\nRestore: ${quote(["cp", "--", backup, path])}`)
 	return backup

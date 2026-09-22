@@ -565,12 +565,35 @@ describe("Codex configuration safety", () => {
 
 	it("still applies catalog-only changes when the Codex TOML is unchanged", async () => {
 		await byId("codex")?.write("global", "key", TEST_MODELS)
+		const configBefore = readFileSync(configPath, "utf8")
+		const timestamp = new Date("2025-01-01T00:00:00Z")
+		utimesSync(configPath, timestamp, timestamp)
 		vi.mocked(confirm).mockClear()
+		vi.mocked(log.warn).mockClear()
 		const models = TEST_MODELS.map((model) => ({ ...model, display_name: `${model.display_name} updated` }))
 		await byId("codex")?.write("global", "key", models)
 		expect(confirm).toHaveBeenCalledOnce()
 		expect(JSON.parse(readFileSync(catalogPath, "utf8"))).toEqual(buildModelCatalog(models))
-		expect(readdirSync(configDir).filter((name) => name.endsWith(".bak"))).toHaveLength(4)
+		expect(readdirSync(configDir).filter((name) => name.endsWith(".bak"))).toHaveLength(3)
+		expect(readFileSync(configPath, "utf8")).toBe(configBefore)
+		expect(statSync(configPath).mtime).toEqual(timestamp)
+		expect(log.warn).toHaveBeenCalledWith(expect.stringContaining(catalogPath))
+		expect(log.warn).not.toHaveBeenCalledWith(expect.stringContaining(configPath))
+	})
+
+	it("does not rewrite or back up an unchanged catalog when the API key changes", async () => {
+		await byId("codex")?.write("global", "key", TEST_MODELS)
+		const catalogBefore = readFileSync(catalogPath, "utf8")
+		const timestamp = new Date("2025-01-01T00:00:00Z")
+		utimesSync(catalogPath, timestamp, timestamp)
+		vi.mocked(log.warn).mockClear()
+		await byId("codex")?.write("global", "new-key", TEST_MODELS)
+		expect(readFileSync(configPath, "utf8")).toContain("Bearer new-key")
+		expect(readdirSync(configDir).filter((name) => name.endsWith(".bak"))).toHaveLength(3)
+		expect(readFileSync(catalogPath, "utf8")).toBe(catalogBefore)
+		expect(statSync(catalogPath).mtime).toEqual(timestamp)
+		expect(log.warn).toHaveBeenCalledWith(expect.stringContaining(configPath))
+		expect(log.warn).not.toHaveBeenCalledWith(expect.stringContaining("will be replaced"))
 	})
 
 	it("warns, defaults to No and backs up both files before applying configuration", async () => {
@@ -609,11 +632,30 @@ describe("Codex configuration safety", () => {
 		expect(readdirSync(configDir)).toEqual(["config.toml", "model_catalog.json"])
 	})
 
-	it("does not change config.toml if the catalog cannot be backed up", async () => {
+	it("explains catalog read failures without changing config.toml", async () => {
 		rmSync(catalogPath)
 		mkdirSync(catalogPath)
-		await expect(byId("codex")?.write("global", "key", TEST_MODELS)).rejects.toThrow()
+		await expect(byId("codex")?.write("global", "key", TEST_MODELS)).rejects.toThrow(
+			`Could not read Codex configuration at ${catalogPath} (EISDIR). No changes written.`,
+		)
 		expect(readFileSync(configPath, "utf8")).toBe(originalConfig)
+		expect(readdirSync(configDir)).toEqual(["config.toml", "model_catalog.json"])
+	})
+
+	it("does not write either configuration file if the second backup fails after confirmation", async () => {
+		vi.mocked(confirm).mockImplementationOnce(async () => {
+			rmSync(catalogPath)
+			mkdirSync(catalogPath)
+			return { kind: "next", value: true }
+		})
+		await expect(byId("codex")?.write("global", "key", TEST_MODELS)).rejects.toThrow(
+			`Could not read ${catalogPath} to create a backup (EISDIR). No configuration changes written.`,
+		)
+		expect(readFileSync(configPath, "utf8")).toBe(originalConfig)
+		expect(statSync(catalogPath).isDirectory()).toBe(true)
+		const backups = readdirSync(configDir).filter((name) => name.endsWith(".bak"))
+		expect(backups).toHaveLength(1)
+		expect(readFileSync(join(configDir, backups[0]), "utf8")).toBe(originalConfig)
 	})
 
 	it("rejects invalid TOML without changing files or echoing parser source excerpts", async () => {

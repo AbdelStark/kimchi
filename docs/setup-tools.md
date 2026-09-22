@@ -29,6 +29,10 @@ providers are preserved. Serialization rewrites formatting and removes
 comments; the original text is retained in the backup. Invalid TOML is rejected
 before either file is changed.
 
+Only files whose generated contents differ are backed up and written. A model
+catalog refresh leaves an unchanged `config.toml` untouched, and an API key
+change leaves an unchanged catalog untouched.
+
 ## Backups and recovery
 
 Before changing an existing file, setup saves its exact original contents
@@ -36,14 +40,19 @@ beside it as `<filename>.kimchi-<unique-id>.bak`. Backups use owner-only
 permissions and are never overwritten by later runs. Files that did not
 previously exist have no backup.
 
+Backups can contain API keys and other credentials. They are retained until
+you remove them. Once the new configuration works and you no longer need to
+restore an older version, delete its `.kimchi-<unique-id>.bak` file. Do not
+share backups or commit them to a repository.
+
 Setup prints each backup's path and a `Restore: cp ...` command. Close the tool,
 then run the printed command to restore that version of its configuration.
 For Codex, restore both the config and catalog backups if both were created.
 Restoring replaces any edits made since the backup, so keep those edits
 separately if needed.
 
-Both Codex backups must succeed before either configuration file is written.
-A later write failure can leave a partial update; use the printed restore
+All required Codex backups must succeed before either configuration file is
+written. A later write failure can leave a partial update; use the printed restore
 commands to recover. Backups are also made when the writers run without an
 interactive terminal, although confirmation is only shown in a terminal.
 

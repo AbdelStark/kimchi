@@ -161,7 +161,8 @@ function readExistingText(path: string): string | undefined {
 		return readFileSync(path, "utf-8")
 	} catch (error) {
 		if (error instanceof Error && "code" in error && error.code === "ENOENT") return undefined
-		throw error
+		const code = error instanceof Error && "code" in error && typeof error.code === "string" ? ` (${error.code})` : ""
+		throw new Error(`Could not read Codex configuration at ${path}${code}. No changes written.`, { cause: error })
 	}
 }
 
@@ -192,16 +193,23 @@ async function writeCodex(
 	const freshToml = buildCodexToml(apiKey, mainSlug, catalogPath)
 	const merged = mergeCodexToml(existingText, freshToml)
 	const catalog = buildModelCatalog(models)
-	if (merged === existingText && `${JSON.stringify(catalog, null, 2)}\n` === existingCatalog) {
+	const configChanged = merged !== existingText
+	const catalogChanged = `${JSON.stringify(catalog, null, 2)}\n` !== existingCatalog
+	if (!configChanged && !catalogChanged) {
 		log.info("Codex configuration is already up to date.")
 		return
 	}
 
-	log.warn(
-		`This switches Codex's default model and provider to Kimchi in ${configPath}, ` +
-			"including when you launch codex directly. Existing settings are preserved, but TOML comments and formatting are rewritten. " +
-			`The model catalog at ${catalogPath} will be replaced. Existing files will be backed up before writing.`,
-	)
+	const changes: string[] = []
+	if (configChanged) {
+		changes.push(
+			`This switches Codex's default model and provider to Kimchi in ${configPath}, ` +
+				"including when you launch codex directly. Existing settings are preserved, but TOML comments and formatting are rewritten.",
+		)
+	}
+	if (catalogChanged) changes.push(`The model catalog at ${catalogPath} will be replaced.`)
+	changes.push("Existing files that change will be backed up before writing.")
+	log.warn(changes.join(" "))
 	if (process.stdin.isTTY) {
 		const answer = await confirm({
 			message: "Apply these changes to Codex configuration?",
@@ -212,11 +220,11 @@ async function writeCodex(
 		if (!answer.value) throw new Error("User declined the settings update.")
 	}
 
-	// Back up both files before changing either, so a backup failure is harmless.
-	backupToolConfig(configPath)
-	backupToolConfig(catalogPath)
-	writeJson(catalogPath, catalog)
-	writeFileAtomic(configPath, merged)
+	// Complete all required backups before writing either file.
+	if (configChanged) backupToolConfig(configPath)
+	if (catalogChanged) backupToolConfig(catalogPath)
+	if (catalogChanged) writeJson(catalogPath, catalog)
+	if (configChanged) writeFileAtomic(configPath, merged)
 }
 
 register({

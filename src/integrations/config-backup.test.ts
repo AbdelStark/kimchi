@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { log } from "@clack/prompts"
@@ -38,6 +38,15 @@ describe("backupToolConfig", () => {
 	it("skips files that do not exist", () => {
 		expect(backupToolConfig(path)).toBeUndefined()
 		expect(existsSync(path)).toBe(false)
+		expect(log.info).not.toHaveBeenCalled()
+	})
+
+	it("explains read failures before creating a backup", () => {
+		mkdirSync(path)
+		expect(() => backupToolConfig(path)).toThrow(
+			`Could not read ${path} to create a backup (EISDIR). No configuration changes written.`,
+		)
+		expect(readdirSync(directory)).toEqual(["settings.json"])
 		expect(log.info).not.toHaveBeenCalled()
 	})
 
