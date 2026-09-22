@@ -16,7 +16,13 @@ export function backupToolConfig(path: string): string | undefined {
 	// Exclusive creation never replaces an earlier backup, even on repeated setup.
 	// Configs can contain credentials; do not inherit permissive source permissions.
 	const backup = `${path}.kimchi-${randomUUID()}.bak`
-	writeFileSync(backup, original, { flag: "wx", mode: 0o600 })
+	try {
+		writeFileSync(backup, original, { flag: "wx", mode: 0o600 })
+	} catch (error) {
+		throw new Error(`Could not create backup for ${path}: ${error instanceof Error ? error.message : "write failed"}`, {
+			cause: error,
+		})
+	}
 	log.info(`Backup saved: ${backup}\nRestore: ${quote(["cp", "--", backup, path])}`)
 	return backup
 }

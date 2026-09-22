@@ -3,6 +3,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { log } from "@clack/prompts"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { readJson } from "../config/json.js"
 import { confirm } from "../setup-wizard/prompt.js"
 import { TEST_MODELS } from "./__fixtures__/models.js"
 import { claudeCodeEnv, injectClaudeCodeEnv } from "./claude-code.js"
@@ -225,6 +226,7 @@ describe("claude-code tool registration", () => {
 		expect(tool).toBeDefined()
 		expect(tool?.binaryName).toBe("claude")
 		expect(tool?.configPath).toBe("~/.claude/settings.json")
+		expect(tool?.interactiveWrite).toBe(true)
 	})
 
 	it("write() merges env into ~/.claude/settings.json without clobbering other keys", async () => {
@@ -513,6 +515,36 @@ describe("Claude configuration safety", () => {
 		vi.unstubAllEnvs()
 		vi.restoreAllMocks()
 		rmSync(scratchHome, { recursive: true, force: true })
+	})
+
+	it("hides unexpected values even in endpoint and telemetry settings", async () => {
+		writeFileSync(
+			settings,
+			JSON.stringify({
+				env: {
+					ANTHROPIC_BASE_URL: "https://user:proxy-secret@example.com?token=url-secret",
+					OTEL_LOGS_EXPORTER: "unexpected-exporter-secret",
+					MY_PROXY_CREDENTIALS: "unmodified-secret",
+				},
+			}),
+		)
+		await byId("claudecode")?.write("global", "key", TEST_MODELS, { telemetryEnabled: true })
+		const preview = JSON.stringify(vi.mocked(log.message).mock.calls)
+		for (const secret of ["proxy-secret", "url-secret", "unexpected-exporter-secret", "unmodified-secret"]) {
+			expect(preview).not.toContain(secret)
+		}
+		expect(preview).toContain("https://llm.kimchi.dev/anthropic")
+		expect(preview).toContain("[redacted]")
+		expect(JSON.parse(readFileSync(settings, "utf8")).env.MY_PROXY_CREDENTIALS).toBe("unmodified-secret")
+	})
+
+	it("reports filesystem error codes without exposing the error message", async () => {
+		vi.mocked(readJson).mockImplementationOnce(() => {
+			throw Object.assign(new Error("private-source-excerpt"), { code: "EACCES" })
+		})
+		await expect(byId("claudecode")?.write("global", "key", TEST_MODELS)).rejects.toThrow(
+			`Could not read Claude Code settings at ${settings} (EACCES). No changes written.`,
+		)
 	})
 
 	it("still writes an explicit empty API key when other Kimchi settings already match", async () => {

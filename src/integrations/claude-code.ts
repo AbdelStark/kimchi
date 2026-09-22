@@ -126,11 +126,14 @@ function envDiff(before: Record<string, unknown>, after: Record<string, unknown>
 function formatDiff(diffs: EnvDiff[]): string {
 	if (diffs.length === 0) return "No changes."
 
+	// Only show exact values generated without credentials. Even an old endpoint
+	// URL or a normally harmless setting can contain a user's secret.
+	const publicValues = claudeCodeEnv("", ANTHROPIC_BASE_URL, { telemetryEnabled: true })
 	const lines: string[] = []
 	for (const d of diffs) {
 		const display = (value: string | undefined) => {
 			if (!value) return "(empty)"
-			return /KEY|TOKEN|SECRET|PASSWORD|AUTHORIZATION|HEADERS/i.test(d.key) ? "[redacted]" : value
+			return publicValues[d.key] === value ? value : "[redacted]"
 		}
 		if (d.kind === "add") lines.push(`  + ${d.key}: ${display(d.new)}`)
 		else if (d.kind === "remove") lines.push(`  - ${d.key}: ${display(d.old)}`)
@@ -162,9 +165,10 @@ async function writeClaudeCode(
 	let existing: Record<string, unknown>
 	try {
 		existing = readJson(path)
-	} catch {
+	} catch (error) {
 		// JSON parser errors can include the source line, including credentials.
-		throw new Error(`Could not read Claude Code settings at ${path}. No changes written.`)
+		const code = error instanceof Error && "code" in error && typeof error.code === "string" ? ` (${error.code})` : ""
+		throw new Error(`Could not read Claude Code settings at ${path}${code}. No changes written.`)
 	}
 	const envBlock: Record<string, unknown> =
 		existing.env && typeof existing.env === "object" && !Array.isArray(existing.env) ? { ...existing.env } : {}

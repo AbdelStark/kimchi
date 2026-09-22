@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { log } from "@clack/prompts"
@@ -13,6 +13,14 @@ import { byId } from "./registry.js"
 vi.mock("../setup-wizard/prompt.js", () => ({ confirm: vi.fn() }))
 
 describe("buildCodexToml", () => {
+	it("round-trips quotes, backslashes and newlines in generated values", () => {
+		const value = 'quoted"\\value\nnext line'
+		const config = parse(buildCodexToml(value, value, value))
+		expect(config.model).toBe(value)
+		expect(config.model_catalog_json).toBe(value)
+		expect(config.model_providers).toMatchObject({ kimchi: { http_headers: { Authorization: `Bearer ${value}` } } })
+	})
+
 	it("emits the three top-level keys Codex needs", () => {
 		const out = buildCodexToml("test-key", "kimi-k2.6", "/home/u/.codex/model_catalog.json")
 		expect(out).toMatch(/^model_provider = "kimchi"\n/m)
@@ -37,6 +45,12 @@ describe("buildCodexToml", () => {
 })
 
 describe("mergeCodexToml", () => {
+	it("distinguishes invalid generated TOML without exposing its contents", () => {
+		expect(() => mergeCodexToml('model = "valid"', 'model = "private-generated-secret" invalid')).toThrow(
+			"Generated Codex config is invalid TOML. No changes written.",
+		)
+	})
+
 	it("preserves the meaning of unrelated top-level settings", () => {
 		const original = 'approval_policy = "on-request"\nsandbox_mode = "workspace-write"\nmodel = "old"\n'
 		const merged = parse(mergeCodexToml(original, buildCodexToml("key", "new", "/catalog.json")))
@@ -147,11 +161,21 @@ wire_api = "chat"
 [[projects]]
 name = "my-project"
 path = "/Users/me/code"
+[[projects.worktrees]]
+path = "/Users/me/worktree"
+
+[[projects]]
+name = "second-project"
+path = "/Users/me/second"
 
 [features]
 multi_agent = true
 `
 		const merged = mergeCodexToml(existing, fresh)
+		expect(parse(merged).projects).toEqual([
+			{ name: "my-project", path: "/Users/me/code", worktrees: [{ path: "/Users/me/worktree" }] },
+			{ name: "second-project", path: "/Users/me/second" },
+		])
 		expect(merged).toContain("[[projects]]")
 		expect(merged).toContain('name = "my-project"')
 		expect(merged).toContain("[features]")
@@ -436,6 +460,7 @@ describe("codex tool registration", () => {
 		expect(tool).toBeDefined()
 		expect(tool?.binaryName).toBe("codex")
 		expect(tool?.configPath).toBe("~/.codex/config.toml")
+		expect(tool?.interactiveWrite).toBe(true)
 	})
 
 	it("isInstalled() returns a boolean", () => {
@@ -520,6 +545,32 @@ describe("Codex configuration safety", () => {
 		vi.unstubAllEnvs()
 		vi.restoreAllMocks()
 		rmSync(scratchHome, { recursive: true, force: true })
+	})
+
+	it("does not prompt, rewrite files or add backups when setup is repeated unchanged", async () => {
+		await byId("codex")?.write("global", "key", TEST_MODELS)
+		const files = readdirSync(configDir)
+		const timestamp = new Date("2025-01-01T00:00:00Z")
+		utimesSync(configPath, timestamp, timestamp)
+		utimesSync(catalogPath, timestamp, timestamp)
+		vi.mocked(confirm).mockClear()
+		vi.mocked(log.warn).mockClear()
+		await byId("codex")?.write("global", "key", TEST_MODELS)
+		expect(confirm).not.toHaveBeenCalled()
+		expect(log.warn).not.toHaveBeenCalled()
+		expect(readdirSync(configDir)).toEqual(files)
+		expect(statSync(configPath).mtime).toEqual(timestamp)
+		expect(statSync(catalogPath).mtime).toEqual(timestamp)
+	})
+
+	it("still applies catalog-only changes when the Codex TOML is unchanged", async () => {
+		await byId("codex")?.write("global", "key", TEST_MODELS)
+		vi.mocked(confirm).mockClear()
+		const models = TEST_MODELS.map((model) => ({ ...model, display_name: `${model.display_name} updated` }))
+		await byId("codex")?.write("global", "key", models)
+		expect(confirm).toHaveBeenCalledOnce()
+		expect(JSON.parse(readFileSync(catalogPath, "utf8"))).toEqual(buildModelCatalog(models))
+		expect(readdirSync(configDir).filter((name) => name.endsWith(".bak"))).toHaveLength(4)
 	})
 
 	it("warns, defaults to No and backs up both files before applying configuration", async () => {

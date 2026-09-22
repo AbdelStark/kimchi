@@ -139,10 +139,14 @@ export function mergeCodexToml(existingText: string, freshToml: string): string 
 	let fresh: TomlTable
 	try {
 		existing = parse(existingText, { integersAsBigInt: true })
-		fresh = parse(freshToml, { integersAsBigInt: true })
 	} catch {
 		// Parser errors include source excerpts, which may contain API keys.
 		throw new Error("Codex config is invalid TOML. No changes written.")
+	}
+	try {
+		fresh = parse(freshToml, { integersAsBigInt: true })
+	} catch {
+		throw new Error("Generated Codex config is invalid TOML. No changes written.")
 	}
 	const merged = {
 		...existing,
@@ -150,6 +154,15 @@ export function mergeCodexToml(existingText: string, freshToml: string): string 
 		model_providers: { ...providersTable(existing), ...providersTable(fresh) },
 	}
 	return stringify(merged, { numbersAsFloat: true })
+}
+
+function readExistingText(path: string): string | undefined {
+	try {
+		return readFileSync(path, "utf-8")
+	} catch (error) {
+		if (error instanceof Error && "code" in error && error.code === "ENOENT") return undefined
+		throw error
+	}
 }
 
 async function writeCodex(
@@ -170,18 +183,19 @@ async function writeCodex(
 
 	mkdirSync(dirname(configPath), { recursive: true })
 
-	let existingText = ""
-	try {
-		existingText = readFileSync(configPath, "utf-8")
-	} catch (err) {
-		if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err
-	}
+	const existingText = readExistingText(configPath) ?? ""
+	const existingCatalog = readExistingText(catalogPath)
 
 	const main = resolveModelRole(models, "main")
 	const mainSlug = main?.slug ?? models[0].slug
 
 	const freshToml = buildCodexToml(apiKey, mainSlug, catalogPath)
 	const merged = mergeCodexToml(existingText, freshToml)
+	const catalog = buildModelCatalog(models)
+	if (merged === existingText && `${JSON.stringify(catalog, null, 2)}\n` === existingCatalog) {
+		log.info("Codex configuration is already up to date.")
+		return
+	}
 
 	log.warn(
 		`This switches Codex's default model and provider to Kimchi in ${configPath}, ` +
@@ -201,7 +215,7 @@ async function writeCodex(
 	// Back up both files before changing either, so a backup failure is harmless.
 	backupToolConfig(configPath)
 	backupToolConfig(catalogPath)
-	writeJson(catalogPath, buildModelCatalog(models))
+	writeJson(catalogPath, catalog)
 	writeFileAtomic(configPath, merged)
 }
 

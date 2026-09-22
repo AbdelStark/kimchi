@@ -46,7 +46,7 @@ describe("backupToolConfig", () => {
 		const backup = backupToolConfig(path)
 		if (!backup) throw new Error("Expected backup")
 		writeFileSync(path, "new settings")
-		expect(() => backupToolConfig(path)).toThrow(/EEXIST/)
+		expect(() => backupToolConfig(path)).toThrow(/Could not create backup for .+: EEXIST/)
 		expect(readFileSync(backup, "utf8")).toBe("original")
 		expect(readFileSync(path, "utf8")).toBe("new settings")
 	})

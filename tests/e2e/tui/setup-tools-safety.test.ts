@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { expect, test } from "@microsoft/tui-test"
 import { parse } from "smol-toml"
 import { fullText, waitForText } from "./support/assertions.js"
-import { runKimchiSession, TUI_TEST_CONFIG } from "./support/kimchi-fixture.js"
+import { launchKimchi, runKimchiSession, TUI_TEST_CONFIG } from "./support/kimchi-fixture.js"
 
 test.use(TUI_TEST_CONFIG)
 
@@ -101,6 +101,23 @@ for (const tool of ["Claude Code", "Codex"] as const) {
 							? "original files backed up and restore instructions displayed"
 							: "default No leaves original configuration intact",
 					)
+					if (apply && tool === "Codex") {
+						// Reset the terminal after exit so the first menu cannot satisfy the next wait.
+						terminal.submit("printf '\\033c%s\\n' 'REPEAT_SETUP_READY'")
+						await waitForText(terminal, /^REPEAT_SETUP_READY$/m, { full: false })
+						launchKimchi(terminal, fixture, ["setup-tools"], fixture.seedEnv)
+						await waitForText(terminal, "Which tools should be configured?", { full: false })
+						terminal.write("a")
+						terminal.write("a")
+						terminal.keyDown(index)
+						terminal.write(" ")
+						terminal.submit("")
+						await waitForText(terminal, "Codex configuration is already up to date.")
+						await waitForText(terminal, "Done.")
+						expect(fullText(terminal)).not.toContain(question)
+						expect(readdirSync(directory).filter((name) => name.endsWith(".bak"))).toEqual(backups)
+						trace.step("repeated Codex setup completes without confirmation or additional backups")
+					}
 				},
 			)
 		})

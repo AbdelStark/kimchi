@@ -6,7 +6,9 @@ Selecting Claude Code or Codex changes the configuration used when you launch
 
 Before applying changes in an interactive terminal, each integration explains
 the effect and asks for confirmation. The default is **No**. Declining or
-cancelling that confirmation leaves the tool's files unchanged.
+cancelling that confirmation leaves the tool's files unchanged. Repeating setup
+with unchanged Claude settings or an identical generated Codex config and
+catalog skips confirmation and writes, including new backups.
 
 ## Claude Code
 
