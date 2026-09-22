@@ -132,7 +132,10 @@ test("/model autocomplete shows and selects Auto for an entitled account without
 			trace.step("model autocomplete open")
 
 			terminal.write("auto")
-			await waitForText(terminal, "Auto (Kimchi Router)", { timeoutMs: INPUT_TIMEOUT_MS, full: false })
+			await waitForText(terminal, "Picks the best model for your tasks automatically.", {
+				timeoutMs: INPUT_TIMEOUT_MS,
+				full: false,
+			})
 			// Upstream 0.85.1 added a "✓ current model" marker column: the row renders
 			// as "→   auto [kimchi-dev]" (cursor, marker column, then the label).
 			expect(viewText(terminal)).toMatch(/→\s+auto \[kimchi-dev\]/)
@@ -160,7 +163,7 @@ test("Auto routes once and keeps the selected concrete model for the session", a
 		async (fixture, trace) => {
 			terminal.submit("Choose a model for this session")
 			await waitForText(terminal, "First routed reply.", { timeoutMs: STREAM_TIMEOUT_MS })
-			await waitForText(terminal, "auto (routed) → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
+			await waitForText(terminal, "auto → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
 			await waitForTurnToSettle(fixture.fake.requests)
 			trace.step("first prompt routed")
 
@@ -248,7 +251,7 @@ test("Auto uses the highest-ranked eligible model when the best model is outside
 		async (fixture) => {
 			terminal.submit("Use the first eligible router-ranked model")
 			await waitForText(terminal, "Ranked fallback reply.", { timeoutMs: STREAM_TIMEOUT_MS })
-			await waitForText(terminal, "auto (fallback) → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
+			await waitForText(terminal, "auto → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
 			await waitForTurnToSettle(fixture.fake.requests)
 
 			expect(requestsTo(fixture, "/v1/route")).toHaveLength(1)
@@ -280,7 +283,7 @@ test("Auto stops an unavailable-router prompt and retries when the user submits 
 
 			terminal.submit("Try the router again")
 			await waitForText(terminal, "Router retry succeeded.", { timeoutMs: STREAM_TIMEOUT_MS })
-			await waitForText(terminal, "auto (routed) → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
+			await waitForText(terminal, "auto → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
 			await waitForTurnToSettle(fixture.fake.requests)
 
 			expect(requestsTo(fixture, "/v1/route")).toHaveLength(2)
@@ -318,7 +321,7 @@ test("Escape cancels an in-flight router request and the corrected prompt can ro
 
 			terminal.submit("Use this corrected prompt instead")
 			await waitForText(terminal, "Corrected prompt succeeded.", { timeoutMs: STREAM_TIMEOUT_MS })
-			await waitForText(terminal, "auto (routed) → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
+			await waitForText(terminal, "auto → ctrl+p", { timeoutMs: STREAM_TIMEOUT_MS })
 			await waitForTurnToSettle(fixture.fake.requests)
 
 			expect(requestsTo(fixture, "/v1/route")).toHaveLength(2)
@@ -657,7 +660,7 @@ test("resuming an Auto session reuses its concrete resolution without the flag",
 		fixture.initialModel = false
 		launchKimchi(terminal, fixture, ["-r", sessionId ?? ""], fixture.seedEnv)
 		await waitForText(terminal, PROMPT_READY, { timeoutMs: STARTUP_TIMEOUT_MS, full: false })
-		await waitForText(terminal, "auto (routed) → ctrl+p", { timeoutMs: STARTUP_TIMEOUT_MS, full: false })
+		await waitForText(terminal, "auto → ctrl+p", { timeoutMs: STARTUP_TIMEOUT_MS, full: false })
 		terminal.submit("Continue the same session")
 		await waitForText(terminal, "Resumed Auto reply.", { timeoutMs: STREAM_TIMEOUT_MS })
 		await waitForTurnToSettle(fixture.fake.requests)

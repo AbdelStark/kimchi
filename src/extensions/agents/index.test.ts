@@ -165,6 +165,7 @@ import { sessionHasImages } from "../model-guard.js"
 import { getMultiModelEnabled } from "../multi-model.js"
 import { getAllowedMultiModelRefs, getModelRoles } from "../orchestration/model-roles.js"
 import { handleRemoteCompletion } from "../remote-run/post-completion.js"
+import { AUTO_MODEL_ID, AUTO_MODEL_PI_NAME, AUTO_MODEL_PROVIDER } from "../router/constants.js"
 import agentsExtension from "./index.js"
 import { AgentManager as MockedAgentManager } from "./manager/agent-manager.js"
 import { RemoteAgentSession } from "./manager/remote-agent-session.js"
@@ -586,7 +587,12 @@ describe("Agent tool multi-mode model guard", () => {
 		expect(managerInstance).toBeDefined()
 
 		const registry = makeMockModelRegistry([
-			{ id: "auto", name: "Auto (Kimchi Router)", provider: "kimchi-dev", input: ["text", "image"] },
+			{
+				id: AUTO_MODEL_ID,
+				name: AUTO_MODEL_PI_NAME,
+				provider: AUTO_MODEL_PROVIDER,
+				input: ["text", "image"],
+			},
 		])
 		const branch = [
 			{
