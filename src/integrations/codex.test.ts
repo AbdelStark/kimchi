@@ -626,7 +626,7 @@ describe("Codex configuration safety", () => {
 		{ kind: "cancel" },
 	] as const)("leaves both files untouched when confirmation is %j", async (answer) => {
 		vi.mocked(confirm).mockResolvedValue(answer)
-		await expect(byId("codex")?.write("global", "key", TEST_MODELS)).rejects.toThrow(/cancelled|declined/)
+		await expect(byId("codex")?.write("global", "key", TEST_MODELS)).resolves.toBe("skipped")
 		expect(readFileSync(configPath, "utf8")).toBe(originalConfig)
 		expect(readFileSync(catalogPath, "utf8")).toBe(originalCatalog)
 		expect(readdirSync(configDir)).toEqual(["config.toml", "model_catalog.json"])

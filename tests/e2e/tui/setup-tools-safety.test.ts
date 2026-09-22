@@ -72,8 +72,13 @@ for (const tool of ["Claude Code", "Codex"] as const) {
 					trace.step("authentication change explained before writing, with credentials hidden")
 					if (apply) terminal.keyLeft()
 					terminal.submit("")
-					await waitForText(terminal, apply ? `${tool}: configured` : "User declined the settings update.")
-					await waitForText(terminal, apply ? "Done." : "Done with errors.")
+					await waitForText(terminal, apply ? `${tool}: configured` : `${tool}: skipped (configuration left unchanged)`)
+					await waitForText(terminal, "Done.")
+					if (!apply) {
+						expect(fullText(terminal)).toContain(`Skipped: ${tool}`)
+						expect(fullText(terminal)).not.toContain("Done with errors.")
+						expect(fullText(terminal)).not.toContain(`${tool}: configured`)
+					}
 
 					const directory = join(fixture.homeDir, tool === "Claude Code" ? ".claude" : ".codex")
 					const backups = readdirSync(directory).filter((name) => name.endsWith(".bak"))

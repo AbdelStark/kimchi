@@ -94,11 +94,12 @@ export async function runSetupTools(args: string[]): Promise<number> {
 	const agentDir =
 		process.env.KIMCHI_CODING_AGENT_DIR ?? resolve(process.env.HOME ?? "~", ".config/kimchi-coding-agent")
 	const modelsJsonPath = resolve(agentDir, "models.json")
+	const { llmEndpoint } = loadConfig()
 	let models: readonly ModelMetadata[] = []
 	const modelSpinner = spinner()
 	modelSpinner.start("Fetching available models…")
 	try {
-		const result = await updateModelsConfig(modelsJsonPath, apiKey, { endpoint: loadConfig().llmEndpoint })
+		const result = await updateModelsConfig(modelsJsonPath, apiKey, { endpoint: llmEndpoint })
 		models = result.models
 		modelSpinner.stop("Models fetched.")
 	} catch (err) {
@@ -143,10 +144,11 @@ export async function runSetupTools(args: string[]): Promise<number> {
 
 	// Print summary.
 	const summaryLines = [
-		`Mode: ${mode}${mode === "override" ? " (configs written)" : " (runtime wrapper)"}`,
+		`Mode: ${mode}${mode === "override" ? " (persistent configuration)" : " (runtime wrapper)"}`,
 		`Scope: ${scope}`,
 		`Telemetry: ${telemetryEnabled ? "enabled" : "disabled"}`,
 		outcome.successes.length > 0 ? `Configured: ${outcome.successes.join(", ")}` : "",
+		outcome.skipped.length > 0 ? `Skipped: ${outcome.skipped.join(", ")}` : "",
 		outcome.failures.length > 0 ? `Failed: ${outcome.failures.map((f) => f.id).join(", ")}` : "",
 	].filter((l) => l.length > 0)
 

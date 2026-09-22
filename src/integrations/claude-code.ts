@@ -147,7 +147,7 @@ async function writeClaudeCode(
 	apiKey: string,
 	_models: readonly ModelMetadata[],
 	options?: { telemetryEnabled?: boolean },
-): Promise<void> {
+): Promise<undefined | "skipped"> {
 	if (!findBinary("claude")) {
 		throw new Error(
 			"Claude Code is not installed or not on PATH. " +
@@ -176,7 +176,10 @@ async function writeClaudeCode(
 	const before = { ...envBlock }
 	injectClaudeCodeEnv(envBlock, ANTHROPIC_BASE_URL, apiKey, options)
 	const diffs = envDiff(before, envBlock)
-	if (diffs.length === 0) return
+	if (diffs.length === 0) {
+		log.info("Claude Code configuration is already up to date.")
+		return
+	}
 
 	log.warn(
 		`This changes Claude Code authentication in ${path}, including when you launch claude directly. ` +
@@ -194,12 +197,7 @@ async function writeClaudeCode(
 			backable: false,
 		})
 
-		if (answer.kind === "cancel") {
-			throw new Error("User cancelled the settings update.")
-		}
-		if (answer.kind === "next" && !answer.value) {
-			throw new Error("User declined the settings update.")
-		}
+		if (answer.kind !== "next" || !answer.value) return "skipped"
 	}
 
 	backupToolConfig(path)

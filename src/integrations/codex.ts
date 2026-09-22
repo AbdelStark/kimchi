@@ -171,7 +171,7 @@ async function writeCodex(
 	apiKey: string,
 	models: readonly ModelMetadata[],
 	_options?: { telemetryEnabled?: boolean },
-): Promise<void> {
+): Promise<undefined | "skipped"> {
 	if (!apiKey) {
 		throw new Error("API key not configured")
 	}
@@ -216,13 +216,14 @@ async function writeCodex(
 			initialValue: false,
 			backable: false,
 		})
-		if (answer.kind !== "next") throw new Error("User cancelled the settings update.")
-		if (!answer.value) throw new Error("User declined the settings update.")
+		if (answer.kind !== "next" || !answer.value) return "skipped"
 	}
 
 	// Complete all required backups before writing either file.
 	if (configChanged) backupToolConfig(configPath)
 	if (catalogChanged) backupToolConfig(catalogPath)
+	// Publish the catalog before switching the model that references it. These
+	// writes are not a transaction; retained backups recover a partial update.
 	if (catalogChanged) writeJson(catalogPath, catalog)
 	if (configChanged) writeFileAtomic(configPath, merged)
 }

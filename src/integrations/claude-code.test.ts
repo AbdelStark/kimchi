@@ -559,6 +559,7 @@ describe("Claude configuration safety", () => {
 		const original = JSON.stringify({ env: claudeCodeEnv("key") })
 		writeFileSync(settings, original)
 		await byId("claudecode")?.write("global", "key", TEST_MODELS)
+		expect(log.info).toHaveBeenCalledWith("Claude Code configuration is already up to date.")
 		expect(readFileSync(settings, "utf8")).toBe(original)
 		expect(readdirSync(join(scratchHome, ".claude"))).toEqual(["settings.json"])
 	})
@@ -632,7 +633,7 @@ describe("Claude configuration safety", () => {
 		const original = '{"env":{"CUSTOM":"keep"}}'
 		writeFileSync(settings, original)
 		vi.mocked(confirm).mockResolvedValue(answer)
-		await expect(byId("claudecode")?.write("global", "key", TEST_MODELS)).rejects.toThrow(/cancelled|declined/)
+		await expect(byId("claudecode")?.write("global", "key", TEST_MODELS)).resolves.toBe("skipped")
 		expect(readFileSync(settings, "utf8")).toBe(original)
 		expect(readdirSync(join(scratchHome, ".claude"))).toEqual(["settings.json"])
 	})
