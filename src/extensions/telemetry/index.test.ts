@@ -1,8 +1,10 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
+import { Type } from "typebox"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { TelemetryConfig } from "../../config.js"
 import { resetAcpClientInfo, setAcpClientInfo } from "../../modes/acp/state.js"
 import { createContext } from "../__mocks__/context.js"
+import { createExtensionApi } from "../__mocks__/extension-api.js"
 import telemetryExtension, {
 	_getTelemetryCtx,
 	trackRemoteExecution,
@@ -44,6 +46,16 @@ const TEST_SURVEY = {
 type Handler = (...args: unknown[]) => Promise<void> | void
 
 function createMockApi(sessionId = "test-session") {
+	const { api, getRegisteredTool } = createExtensionApi()
+	for (const name of ["read", "write", "edit", "bash"]) {
+		api.registerTool({
+			name,
+			label: name,
+			description: name,
+			parameters: Type.Object({}),
+			execute: async () => ({ content: [], details: {} }),
+		})
+	}
 	const handlers = new Map<string, Handler[]>()
 	const ctx = createContext({ sessionManager: { getSessionId: () => sessionId }, model: { id: "claude-opus-4-6" } })
 	const on = vi.fn((event: string, handler: Handler) => {
@@ -64,7 +76,7 @@ function createMockApi(sessionId = "test-session") {
 			return () => {}
 		},
 	}
-	return { on, handlers, events, api: { on, events } as unknown as ExtensionAPI, ctx }
+	return { on, handlers, events, api: { ...api, on, events } as unknown as ExtensionAPI, ctx, getRegisteredTool }
 }
 
 function getHandler(handlers: Map<string, Handler[]>, event: string): Handler {
@@ -121,6 +133,66 @@ describe("telemetryExtension integration", () => {
 		const { handlers, api } = createMockApi()
 		telemetryExtension(makeConfig({ enabled: false }))(api)
 		expect(handlers.size).toBe(0)
+	})
+
+	it("counts unknown tool failures without using model-generated names as telemetry labels", async () => {
+		const { handlers, api } = createMockApi()
+		telemetryExtension(makeConfig())(api)
+		const malformedName = `write content\n${"x".repeat(9501)}`
+		for (const toolName of [malformedName, "nonexistent_tool"]) {
+			await getHandler(handlers, "tool_execution_start")({ toolCallId: "bad", toolName, args: {} })
+			await getHandler(
+				handlers,
+				"tool_execution_end",
+			)({
+				toolCallId: "bad",
+				isError: true,
+				result: { content: [{ type: "text", text: `Tool ${toolName} not found` }] },
+			})
+		}
+		const tm = _getTelemetryCtx()
+		tm?.flushLogBuffer()
+		await Promise.allSettled([...(tm?.inFlight ?? [])])
+
+		expect(tm?.cumulative.toolUsage).toEqual({ unknown: 2 })
+		expect(Object.keys(tm?.cumulative.toolDurationMs ?? {})).toEqual(["unknown"])
+		expect(logEvents(fetchMock).filter((event) => event.eventName === "error")).toEqual([
+			expect.objectContaining({ attrs: expect.objectContaining({ error_type: "tool_failure", tool_name: "unknown" }) }),
+			expect.objectContaining({ attrs: expect.objectContaining({ error_type: "tool_failure", tool_name: "unknown" }) }),
+		])
+	})
+
+	it.each([
+		{ activeTools: [] },
+		{ activeTools: ["bash"] },
+	])("preserves an in-flight registered tool when active tools become $activeTools", async ({ activeTools }) => {
+		const { handlers, api } = createMockApi()
+		telemetryExtension(makeConfig())(api)
+		// Pi can still execute read from the turn snapshot after live visibility changes.
+		api.setActiveTools(activeTools)
+		await getHandler(handlers, "tool_execution_start")({ toolCallId: "in-flight", toolName: "read", args: {} })
+		await getHandler(handlers, "tool_execution_end")({ toolCallId: "in-flight", isError: true })
+		const tm = _getTelemetryCtx()
+		tm?.flushLogBuffer()
+		await Promise.allSettled([...(tm?.inFlight ?? [])])
+
+		expect(tm?.cumulative.toolUsage).toEqual({ read: 1 })
+		expect(Object.keys(tm?.cumulative.toolDurationMs ?? {})).toEqual(["read"])
+		expect(logEvents(fetchMock).filter((event) => event.eventName === "error")).toEqual([
+			expect.objectContaining({ attrs: expect.objectContaining({ error_type: "tool_failure", tool_name: "read" }) }),
+		])
+	})
+
+	it("preserves tools registered after telemetry initialization", async () => {
+		const { handlers, api, getRegisteredTool } = createMockApi()
+		telemetryExtension(makeConfig())(api)
+		api.registerTool({ ...getRegisteredTool("bash"), name: "mcp__example__lookup" })
+		api.setActiveTools(["bash", "mcp__example__lookup"])
+		for (const toolName of api.getActiveTools()) {
+			await getHandler(handlers, "tool_execution_start")({ toolCallId: toolName, toolName, args: {} })
+			await getHandler(handlers, "tool_execution_end")({ toolCallId: toolName, isError: true })
+		}
+		expect(_getTelemetryCtx()?.cumulative.toolUsage).toEqual({ bash: 1, mcp__example__lookup: 1 })
 	})
 
 	it("full session lifecycle: start -> message -> tool -> shutdown", async () => {

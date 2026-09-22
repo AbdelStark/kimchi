@@ -910,7 +910,10 @@ export default function telemetryExtension(config: TelemetryConfig) {
 			handleSessionCompact(telemetryCtx, ctx)
 		})
 		pi.on("tool_execution_start", async (event) => {
-			handleToolExecutionStart(telemetryCtx, event)
+			// Pi emits this before rejecting unknown tools; the name can contain generated content.
+			// In-flight tools can outlive their active visibility, so check registered definitions.
+			const toolName = pi.getAllTools().some((tool) => tool.name === event.toolName) ? event.toolName : "unknown"
+			handleToolExecutionStart(telemetryCtx, { ...event, toolName })
 		})
 		pi.on("tool_execution_end", async (event, ctx) => {
 			handleToolExecutionEnd(telemetryCtx, ctx, event)
