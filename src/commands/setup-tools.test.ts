@@ -18,6 +18,7 @@ vi.mock("../config.js", () => ({
 	getApiKeyMismatchWarning: vi.fn(),
 	isTelemetryExplicitlyConfigured: vi.fn(),
 	readTelemetryConfig: vi.fn(),
+	loadConfig: vi.fn(() => ({ llmEndpoint: "http://localhost:1234" })),
 }))
 
 vi.mock("../models.js", () => ({
@@ -110,6 +111,9 @@ describe("runSetupTools", () => {
 
 		const result = await runSetupTools([])
 		expect(result).toBe(0)
+		expect(updateModelsConfig).toHaveBeenCalledWith(expect.any(String), "test-key", {
+			endpoint: "http://localhost:1234",
+		})
 	})
 
 	it("exits with code 1 when a selected tool fails to configure", async () => {
