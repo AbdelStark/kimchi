@@ -103,6 +103,13 @@ import {
 	isAutoModel,
 } from "../../extensions/router/constants.js"
 import { getAutoRoutingState } from "../../extensions/router/state.js"
+import {
+	isLayaModel,
+	LAYA_MODEL_DESCRIPTION,
+	LAYA_MODEL_ID,
+	LAYA_MODEL_NAME,
+	LAYA_MODEL_REF,
+} from "../../extensions/router-laya/constants.js"
 import { configureHttpIdleTimeout } from "../../http/proxy.js"
 import { KIMCHI_PROVIDER_ID } from "../../kimchi-provider.js"
 import { updateModelsConfig } from "../../models.js"
@@ -1926,6 +1933,19 @@ function autoModelOption(sessionId: string): SessionConfigSelectOption {
 	return { value: AUTO_MODEL_REF, name, description: AUTO_MODEL_DESCRIPTION }
 }
 
+/**
+ * The experimental laya System 1 router's select option — mirrors Auto: a
+ * description row that names the concrete pick once laya has resolved one.
+ */
+function layaModelOption(sessionId: string): SessionConfigSelectOption {
+	const state = getAutoRoutingState(sessionId)
+	const name =
+		state.status === "resolved" && state.requestedId === LAYA_MODEL_ID
+			? `${LAYA_MODEL_NAME} (${state.model.id})`
+			: LAYA_MODEL_NAME
+	return { value: LAYA_MODEL_REF, name, description: LAYA_MODEL_DESCRIPTION }
+}
+
 export function buildModelConfigOption(session: AgentSessionModelConfig): SessionConfigOption {
 	const multiModelEnabled = getMultiModelEnabled(session.sessionManager)
 	const modelRegistry = getSessionModelRegistry(session)
@@ -1946,7 +1966,11 @@ export function buildModelConfigOption(session: AgentSessionModelConfig): Sessio
 		},
 		...modelRegistry
 			.getAvailable()
-			.map((m) => (isAutoModel(m) ? autoModelOption(session.sessionId) : { value: refFromModel(m), name: m.name }))
+			.map((m) => {
+				if (isAutoModel(m)) return autoModelOption(session.sessionId)
+				if (isLayaModel(m)) return layaModelOption(session.sessionId)
+				return { value: refFromModel(m), name: m.name }
+			})
 			.sort((a, b) => a.value.localeCompare(b.value)),
 	]
 	// biome-ignore lint/style/noNonNullAssertion: we assert model availability before session is created/loaded via assertSessionHasModel.

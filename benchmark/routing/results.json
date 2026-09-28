@@ -1,0 +1,2302 @@
+{
+	"summary": {
+		"meta": {
+			"startedAt": "2026-09-28T08:33:32.781Z",
+			"durationMs": 7212,
+			"mode": "real laya-only",
+			"suitePath": "/Users/abdel/dev/me/kimchi/benchmark/routing/suite.jsonl",
+			"notes": [
+				"LLM router credentials missing (KIMCHI_ROUTER_ENDPOINT + KIMCHI_ROUTER_API_KEY / CASTAI_API_KEY) — degrading to a laya-only real run; agreement and LLM-side metrics stay unmeasured.",
+				"laya-serve spawned at http://127.0.0.1:8000 in 4050ms"
+			],
+			"environment": {
+				"platform": "darwin",
+				"arch": "arm64",
+				"cpuModel": "Apple M4 Max",
+				"cpuCount": 16,
+				"nodeVersion": "v24.18.0",
+				"layaCheckpoint": "convaiinnovations/laya"
+			},
+			"entryCount": 100
+		},
+		"routers": {
+			"laya": {
+				"attempts": 100,
+				"errors": 0,
+				"correct": 42,
+				"accuracy": 0.42,
+				"accuracyByCategory": {
+					"agentic-multifile": {
+						"correct": 0,
+						"total": 10,
+						"accuracy": 0
+					},
+					"chat-copy": {
+						"correct": 0,
+						"total": 10,
+						"accuracy": 0
+					},
+					"code-feature": {
+						"correct": 10,
+						"total": 10,
+						"accuracy": 1
+					},
+					"code-refactor": {
+						"correct": 10,
+						"total": 10,
+						"accuracy": 1
+					},
+					"debugging": {
+						"correct": 8,
+						"total": 10,
+						"accuracy": 0.8
+					},
+					"deep-reasoning": {
+						"correct": 4,
+						"total": 10,
+						"accuracy": 0.4
+					},
+					"long-context": {
+						"correct": 0,
+						"total": 10,
+						"accuracy": 0
+					},
+					"quick-fix": {
+						"correct": 0,
+						"total": 10,
+						"accuracy": 0
+					},
+					"test-writing": {
+						"correct": 10,
+						"total": 10,
+						"accuracy": 1
+					},
+					"vision": {
+						"correct": 0,
+						"total": 10,
+						"accuracy": 0
+					}
+				},
+				"answerConfidence": {
+					"mean": 0.3354,
+					"correctMean": 0.3766,
+					"incorrectMean": 0.3056
+				},
+				"latency": {
+					"p50": 30,
+					"p95": 34,
+					"mean": 31
+				},
+				"unmapped": []
+			}
+		},
+		"cost": {
+			"laya": {
+				"estimatedUsd": 0,
+				"note": "local sidecar; zero marginal routing cost"
+			}
+		}
+	},
+	"records": [
+		{
+			"id": "agentic-multifile-01",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 175,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 135,
+				"confidence": 0.0476,
+				"answerConfidence": 0.3475,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1537,
+					"kimi-k2.5-fast": 0.2283,
+					"kimi-k2.6-code": 0.3475,
+					"kimi-k3-flagship": 0.1453,
+					"kimi-vl-vision": 0.1252
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-02",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 176,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0517,
+				"answerConfidence": 0.3643,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1401,
+					"kimi-k2.5-fast": 0.2096,
+					"kimi-k2.6-code": 0.3643,
+					"kimi-k3-flagship": 0.1327,
+					"kimi-vl-vision": 0.1532
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-03",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 168,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 38,
+				"confidence": 0.1458,
+				"answerConfidence": 0.5031,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1085,
+					"kimi-k2.5-fast": 0.1436,
+					"kimi-k2.6-code": 0.5031,
+					"kimi-k3-flagship": 0.1462,
+					"kimi-vl-vision": 0.0985
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-04",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 200,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0616,
+				"answerConfidence": 0.3836,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1458,
+					"kimi-k2.5-fast": 0.2027,
+					"kimi-k2.6-code": 0.3836,
+					"kimi-k3-flagship": 0.1303,
+					"kimi-vl-vision": 0.1376
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-05",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 180,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 34,
+				"confidence": 0.024,
+				"answerConfidence": 0.3046,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1341,
+					"kimi-k2.5-fast": 0.185,
+					"kimi-k2.6-code": 0.3046,
+					"kimi-k3-flagship": 0.2049,
+					"kimi-vl-vision": 0.1715
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-06",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 208,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 35,
+				"confidence": 0.0729,
+				"answerConfidence": 0.4007,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1218,
+					"kimi-k2.5-fast": 0.2008,
+					"kimi-k2.6-code": 0.4007,
+					"kimi-k3-flagship": 0.1462,
+					"kimi-vl-vision": 0.1305
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-07",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 178,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.1603,
+				"answerConfidence": 0.5165,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.0842,
+					"kimi-k2.5-fast": 0.1575,
+					"kimi-k2.6-code": 0.5165,
+					"kimi-k3-flagship": 0.1153,
+					"kimi-vl-vision": 0.1266
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-08",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 192,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0279,
+				"answerConfidence": 0.3195,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1548,
+					"kimi-k2.5-fast": 0.2078,
+					"kimi-k2.6-code": 0.3195,
+					"kimi-k3-flagship": 0.1591,
+					"kimi-vl-vision": 0.1587
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-09",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 190,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.1084,
+				"answerConfidence": 0.42,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.0836,
+					"kimi-k2.5-fast": 0.1705,
+					"kimi-k2.6-code": 0.42,
+					"kimi-k3-flagship": 0.2314,
+					"kimi-vl-vision": 0.0945
+				}
+			}
+		},
+		{
+			"id": "agentic-multifile-10",
+			"category": "agentic-multifile",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 207,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 33,
+				"confidence": 0.0723,
+				"answerConfidence": 0.3887,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.123,
+					"kimi-k2.5-fast": 0.1629,
+					"kimi-k2.6-code": 0.3887,
+					"kimi-k3-flagship": 0.2169,
+					"kimi-vl-vision": 0.1085
+				}
+			}
+		},
+		{
+			"id": "code-feature-01",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 111,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0436,
+				"answerConfidence": 0.3404,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1843,
+					"kimi-k2.5-fast": 0.2128,
+					"kimi-k2.6-code": 0.3404,
+					"kimi-k3-flagship": 0.1166,
+					"kimi-vl-vision": 0.1459
+				}
+			}
+		},
+		{
+			"id": "code-feature-02",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 120,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0532,
+				"answerConfidence": 0.367,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1655,
+					"kimi-k2.5-fast": 0.1912,
+					"kimi-k2.6-code": 0.367,
+					"kimi-k3-flagship": 0.1121,
+					"kimi-vl-vision": 0.1641
+				}
+			}
+		},
+		{
+			"id": "code-feature-03",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 129,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0376,
+				"answerConfidence": 0.3355,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1178,
+					"kimi-k2.5-fast": 0.1753,
+					"kimi-k2.6-code": 0.3355,
+					"kimi-k3-flagship": 0.1829,
+					"kimi-vl-vision": 0.1886
+				}
+			}
+		},
+		{
+			"id": "code-feature-04",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 144,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.1133,
+				"answerConfidence": 0.4572,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1325,
+					"kimi-k2.5-fast": 0.1887,
+					"kimi-k2.6-code": 0.4572,
+					"kimi-k3-flagship": 0.1017,
+					"kimi-vl-vision": 0.1199
+				}
+			}
+		},
+		{
+			"id": "code-feature-05",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 112,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 33,
+				"confidence": 0.0619,
+				"answerConfidence": 0.3874,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1541,
+					"kimi-k2.5-fast": 0.1892,
+					"kimi-k2.6-code": 0.3874,
+					"kimi-k3-flagship": 0.1251,
+					"kimi-vl-vision": 0.1442
+				}
+			}
+		},
+		{
+			"id": "code-feature-06",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 118,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.122,
+				"answerConfidence": 0.4435,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1206,
+					"kimi-k2.5-fast": 0.2316,
+					"kimi-k2.6-code": 0.4435,
+					"kimi-k3-flagship": 0.0748,
+					"kimi-vl-vision": 0.1295
+				}
+			}
+		},
+		{
+			"id": "code-feature-07",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 114,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0522,
+				"answerConfidence": 0.3686,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1394,
+					"kimi-k2.5-fast": 0.1979,
+					"kimi-k2.6-code": 0.3686,
+					"kimi-k3-flagship": 0.1318,
+					"kimi-vl-vision": 0.1624
+				}
+			}
+		},
+		{
+			"id": "code-feature-08",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 118,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0237,
+				"answerConfidence": 0.3063,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1653,
+					"kimi-k2.5-fast": 0.2139,
+					"kimi-k2.6-code": 0.3063,
+					"kimi-k3-flagship": 0.1505,
+					"kimi-vl-vision": 0.1641
+				}
+			}
+		},
+		{
+			"id": "code-feature-09",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 111,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 36,
+				"confidence": 0.0827,
+				"answerConfidence": 0.4082,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1672,
+					"kimi-k2.5-fast": 0.1987,
+					"kimi-k2.6-code": 0.4082,
+					"kimi-k3-flagship": 0.0971,
+					"kimi-vl-vision": 0.1288
+				}
+			}
+		},
+		{
+			"id": "code-feature-10",
+			"category": "code-feature",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 153,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.1089,
+				"answerConfidence": 0.4331,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.0869,
+					"kimi-k2.5-fast": 0.1894,
+					"kimi-k2.6-code": 0.4331,
+					"kimi-k3-flagship": 0.0972,
+					"kimi-vl-vision": 0.1934
+				}
+			}
+		},
+		{
+			"id": "code-refactor-01",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 134,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0273,
+				"answerConfidence": 0.3135,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1884,
+					"kimi-k2.5-fast": 0.206,
+					"kimi-k2.6-code": 0.3135,
+					"kimi-k3-flagship": 0.1441,
+					"kimi-vl-vision": 0.1479
+				}
+			}
+		},
+		{
+			"id": "code-refactor-02",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 108,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0234,
+				"answerConfidence": 0.2864,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2261,
+					"kimi-k2.5-fast": 0.2053,
+					"kimi-k2.6-code": 0.2864,
+					"kimi-k3-flagship": 0.1363,
+					"kimi-vl-vision": 0.146
+				}
+			}
+		},
+		{
+			"id": "code-refactor-03",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 103,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0593,
+				"answerConfidence": 0.3593,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1688,
+					"kimi-k2.5-fast": 0.219,
+					"kimi-k2.6-code": 0.3593,
+					"kimi-k3-flagship": 0.0916,
+					"kimi-vl-vision": 0.1614
+				}
+			}
+		},
+		{
+			"id": "code-refactor-04",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 123,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0162,
+				"answerConfidence": 0.2772,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1676,
+					"kimi-k2.5-fast": 0.2067,
+					"kimi-k2.6-code": 0.2772,
+					"kimi-k3-flagship": 0.1408,
+					"kimi-vl-vision": 0.2076
+				}
+			}
+		},
+		{
+			"id": "code-refactor-05",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 114,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0732,
+				"answerConfidence": 0.3862,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1749,
+					"kimi-k2.5-fast": 0.2173,
+					"kimi-k2.6-code": 0.3862,
+					"kimi-k3-flagship": 0.108,
+					"kimi-vl-vision": 0.1136
+				}
+			}
+		},
+		{
+			"id": "code-refactor-06",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 126,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0507,
+				"answerConfidence": 0.3403,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2086,
+					"kimi-k2.5-fast": 0.2163,
+					"kimi-k2.6-code": 0.3403,
+					"kimi-k3-flagship": 0.1141,
+					"kimi-vl-vision": 0.1207
+				}
+			}
+		},
+		{
+			"id": "code-refactor-07",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 106,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0305,
+				"answerConfidence": 0.3077,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1816,
+					"kimi-k2.5-fast": 0.2289,
+					"kimi-k2.6-code": 0.3077,
+					"kimi-k3-flagship": 0.1245,
+					"kimi-vl-vision": 0.1573
+				}
+			}
+		},
+		{
+			"id": "code-refactor-08",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 116,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.097,
+				"answerConfidence": 0.4128,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1672,
+					"kimi-k2.5-fast": 0.2214,
+					"kimi-k2.6-code": 0.4128,
+					"kimi-k3-flagship": 0.0806,
+					"kimi-vl-vision": 0.118
+				}
+			}
+		},
+		{
+			"id": "code-refactor-09",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 105,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0428,
+				"answerConfidence": 0.346,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1397,
+					"kimi-k2.5-fast": 0.2022,
+					"kimi-k2.6-code": 0.346,
+					"kimi-k3-flagship": 0.1826,
+					"kimi-vl-vision": 0.1294
+				}
+			}
+		},
+		{
+			"id": "code-refactor-10",
+			"category": "code-refactor",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 149,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0429,
+				"answerConfidence": 0.3505,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1788,
+					"kimi-k2.5-fast": 0.1945,
+					"kimi-k2.6-code": 0.3505,
+					"kimi-k3-flagship": 0.1411,
+					"kimi-vl-vision": 0.1352
+				}
+			}
+		},
+		{
+			"id": "test-writing-01",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 129,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0907,
+				"answerConfidence": 0.4308,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1429,
+					"kimi-k2.5-fast": 0.1826,
+					"kimi-k2.6-code": 0.4308,
+					"kimi-k3-flagship": 0.112,
+					"kimi-vl-vision": 0.1316
+				}
+			}
+		},
+		{
+			"id": "test-writing-02",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 123,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0329,
+				"answerConfidence": 0.3268,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1553,
+					"kimi-k2.5-fast": 0.2024,
+					"kimi-k2.6-code": 0.3268,
+					"kimi-k3-flagship": 0.1319,
+					"kimi-vl-vision": 0.1837
+				}
+			}
+		},
+		{
+			"id": "test-writing-03",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 143,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0852,
+				"answerConfidence": 0.4141,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1445,
+					"kimi-k2.5-fast": 0.2084,
+					"kimi-k2.6-code": 0.4141,
+					"kimi-k3-flagship": 0.115,
+					"kimi-vl-vision": 0.118
+				}
+			}
+		},
+		{
+			"id": "test-writing-04",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 134,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0933,
+				"answerConfidence": 0.4281,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1515,
+					"kimi-k2.5-fast": 0.1962,
+					"kimi-k2.6-code": 0.4281,
+					"kimi-k3-flagship": 0.1122,
+					"kimi-vl-vision": 0.1121
+				}
+			}
+		},
+		{
+			"id": "test-writing-05",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 121,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0663,
+				"answerConfidence": 0.3851,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.131,
+					"kimi-k2.5-fast": 0.2148,
+					"kimi-k2.6-code": 0.3851,
+					"kimi-k3-flagship": 0.147,
+					"kimi-vl-vision": 0.1221
+				}
+			}
+		},
+		{
+			"id": "test-writing-06",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 142,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0318,
+				"answerConfidence": 0.3138,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1373,
+					"kimi-k2.5-fast": 0.2336,
+					"kimi-k2.6-code": 0.3138,
+					"kimi-k3-flagship": 0.1637,
+					"kimi-vl-vision": 0.1516
+				}
+			}
+		},
+		{
+			"id": "test-writing-07",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 111,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0548,
+				"answerConfidence": 0.3693,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1343,
+					"kimi-k2.5-fast": 0.2095,
+					"kimi-k2.6-code": 0.3693,
+					"kimi-k3-flagship": 0.1323,
+					"kimi-vl-vision": 0.1546
+				}
+			}
+		},
+		{
+			"id": "test-writing-08",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 153,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0443,
+				"answerConfidence": 0.3441,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1501,
+					"kimi-k2.5-fast": 0.225,
+					"kimi-k2.6-code": 0.3441,
+					"kimi-k3-flagship": 0.1489,
+					"kimi-vl-vision": 0.1319
+				}
+			}
+		},
+		{
+			"id": "test-writing-09",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 87,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0224,
+				"answerConfidence": 0.305,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1805,
+					"kimi-k2.5-fast": 0.2054,
+					"kimi-k2.6-code": 0.305,
+					"kimi-k3-flagship": 0.1591,
+					"kimi-vl-vision": 0.15
+				}
+			}
+		},
+		{
+			"id": "test-writing-10",
+			"category": "test-writing",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 143,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0641,
+				"answerConfidence": 0.3879,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1496,
+					"kimi-k2.5-fast": 0.2004,
+					"kimi-k2.6-code": 0.3879,
+					"kimi-k3-flagship": 0.131,
+					"kimi-vl-vision": 0.1311
+				}
+			}
+		},
+		{
+			"id": "debugging-01",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 160,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 30,
+				"confidence": 0.0044,
+				"answerConfidence": 0.237,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1624,
+					"kimi-k2.5-fast": 0.1965,
+					"kimi-k2.6-code": 0.206,
+					"kimi-k3-flagship": 0.198,
+					"kimi-vl-vision": 0.237
+				}
+			}
+		},
+		{
+			"id": "debugging-02",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 153,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0958,
+				"answerConfidence": 0.4397,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1162,
+					"kimi-k2.5-fast": 0.161,
+					"kimi-k2.6-code": 0.4397,
+					"kimi-k3-flagship": 0.119,
+					"kimi-vl-vision": 0.1641
+				}
+			}
+		},
+		{
+			"id": "debugging-03",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 133,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 33,
+				"confidence": 0.0383,
+				"answerConfidence": 0.3401,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1404,
+					"kimi-k2.5-fast": 0.207,
+					"kimi-k2.6-code": 0.3401,
+					"kimi-k3-flagship": 0.1675,
+					"kimi-vl-vision": 0.145
+				}
+			}
+		},
+		{
+			"id": "debugging-04",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 108,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0183,
+				"answerConfidence": 0.2983,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1846,
+					"kimi-k2.5-fast": 0.1639,
+					"kimi-k2.6-code": 0.2983,
+					"kimi-k3-flagship": 0.1596,
+					"kimi-vl-vision": 0.1935
+				}
+			}
+		},
+		{
+			"id": "debugging-05",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 131,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0435,
+				"answerConfidence": 0.3246,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1818,
+					"kimi-k2.5-fast": 0.2045,
+					"kimi-k2.6-code": 0.3246,
+					"kimi-k3-flagship": 0.0922,
+					"kimi-vl-vision": 0.197
+				}
+			}
+		},
+		{
+			"id": "debugging-06",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 129,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.1942,
+				"answerConfidence": 0.5527,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1056,
+					"kimi-k2.5-fast": 0.1324,
+					"kimi-k2.6-code": 0.5527,
+					"kimi-k3-flagship": 0.0751,
+					"kimi-vl-vision": 0.1342
+				}
+			}
+		},
+		{
+			"id": "debugging-07",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 161,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0317,
+				"answerConfidence": 0.3346,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1637,
+					"kimi-k2.5-fast": 0.1595,
+					"kimi-k2.6-code": 0.3346,
+					"kimi-k3-flagship": 0.1578,
+					"kimi-vl-vision": 0.1843
+				}
+			}
+		},
+		{
+			"id": "debugging-08",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 157,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 30,
+				"confidence": 0.003,
+				"answerConfidence": 0.2108,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2108,
+					"kimi-k2.5-fast": 0.2105,
+					"kimi-k2.6-code": 0.2065,
+					"kimi-k3-flagship": 0.2106,
+					"kimi-vl-vision": 0.1616
+				}
+			}
+		},
+		{
+			"id": "debugging-09",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 140,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0812,
+				"answerConfidence": 0.4201,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1498,
+					"kimi-k2.5-fast": 0.1758,
+					"kimi-k2.6-code": 0.4201,
+					"kimi-k3-flagship": 0.1246,
+					"kimi-vl-vision": 0.1297
+				}
+			}
+		},
+		{
+			"id": "debugging-10",
+			"category": "debugging",
+			"expected": "kimi-k2.6-code",
+			"vision": false,
+			"promptChars": 118,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0806,
+				"answerConfidence": 0.4008,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1619,
+					"kimi-k2.5-fast": 0.2143,
+					"kimi-k2.6-code": 0.4008,
+					"kimi-k3-flagship": 0.1018,
+					"kimi-vl-vision": 0.1212
+				}
+			}
+		},
+		{
+			"id": "quick-fix-01",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 66,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0144,
+				"answerConfidence": 0.2565,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2055,
+					"kimi-k2.5-fast": 0.2079,
+					"kimi-k2.6-code": 0.2565,
+					"kimi-k3-flagship": 0.1264,
+					"kimi-vl-vision": 0.2037
+				}
+			}
+		},
+		{
+			"id": "quick-fix-02",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 77,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 33,
+				"confidence": 0.0718,
+				"answerConfidence": 0.3485,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1766,
+					"kimi-k2.5-fast": 0.2672,
+					"kimi-k2.6-code": 0.3485,
+					"kimi-k3-flagship": 0.0873,
+					"kimi-vl-vision": 0.1203
+				}
+			}
+		},
+		{
+			"id": "quick-fix-03",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 95,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 34,
+				"confidence": 0.0287,
+				"answerConfidence": 0.3074,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1598,
+					"kimi-k2.5-fast": 0.2296,
+					"kimi-k2.6-code": 0.3074,
+					"kimi-k3-flagship": 0.133,
+					"kimi-vl-vision": 0.1702
+				}
+			}
+		},
+		{
+			"id": "quick-fix-04",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 44,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0354,
+				"answerConfidence": 0.2816,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1989,
+					"kimi-k2.5-fast": 0.2649,
+					"kimi-k2.6-code": 0.2816,
+					"kimi-k3-flagship": 0.1099,
+					"kimi-vl-vision": 0.1447
+				}
+			}
+		},
+		{
+			"id": "quick-fix-05",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 69,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 29,
+				"confidence": 0.0139,
+				"answerConfidence": 0.247,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.247,
+					"kimi-k2.5-fast": 0.2124,
+					"kimi-k2.6-code": 0.2303,
+					"kimi-k3-flagship": 0.1312,
+					"kimi-vl-vision": 0.1791
+				}
+			}
+		},
+		{
+			"id": "quick-fix-06",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 54,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0426,
+				"answerConfidence": 0.3342,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2036,
+					"kimi-k2.5-fast": 0.2036,
+					"kimi-k2.6-code": 0.3342,
+					"kimi-k3-flagship": 0.1111,
+					"kimi-vl-vision": 0.1475
+				}
+			}
+		},
+		{
+			"id": "quick-fix-07",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 82,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0218,
+				"answerConfidence": 0.2801,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2101,
+					"kimi-k2.5-fast": 0.214,
+					"kimi-k2.6-code": 0.2801,
+					"kimi-k3-flagship": 0.1204,
+					"kimi-vl-vision": 0.1754
+				}
+			}
+		},
+		{
+			"id": "quick-fix-08",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 67,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 29,
+				"confidence": 0.0142,
+				"answerConfidence": 0.2523,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1889,
+					"kimi-k2.5-fast": 0.1713,
+					"kimi-k2.6-code": 0.2453,
+					"kimi-k3-flagship": 0.1422,
+					"kimi-vl-vision": 0.2523
+				}
+			}
+		},
+		{
+			"id": "quick-fix-09",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 88,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.044,
+				"answerConfidence": 0.3067,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2102,
+					"kimi-k2.5-fast": 0.2433,
+					"kimi-k2.6-code": 0.3067,
+					"kimi-k3-flagship": 0.0975,
+					"kimi-vl-vision": 0.1423
+				}
+			}
+		},
+		{
+			"id": "quick-fix-10",
+			"category": "quick-fix",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 95,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 29,
+				"confidence": 0.0051,
+				"answerConfidence": 0.2297,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2297,
+					"kimi-k2.5-fast": 0.1906,
+					"kimi-k2.6-code": 0.2228,
+					"kimi-k3-flagship": 0.1587,
+					"kimi-vl-vision": 0.1981
+				}
+			}
+		},
+		{
+			"id": "chat-copy-01",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 103,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0301,
+				"answerConfidence": 0.2871,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2422,
+					"kimi-k2.5-fast": 0.2016,
+					"kimi-k2.6-code": 0.2871,
+					"kimi-k3-flagship": 0.1133,
+					"kimi-vl-vision": 0.1558
+				}
+			}
+		},
+		{
+			"id": "chat-copy-02",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 92,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0135,
+				"answerConfidence": 0.2621,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1701,
+					"kimi-k2.5-fast": 0.2315,
+					"kimi-k2.6-code": 0.2621,
+					"kimi-k3-flagship": 0.1898,
+					"kimi-vl-vision": 0.1465
+				}
+			}
+		},
+		{
+			"id": "chat-copy-03",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 99,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 28,
+				"confidence": 0.0297,
+				"answerConfidence": 0.3066,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.3066,
+					"kimi-k2.5-fast": 0.1367,
+					"kimi-k2.6-code": 0.2312,
+					"kimi-k3-flagship": 0.1826,
+					"kimi-vl-vision": 0.1429
+				}
+			}
+		},
+		{
+			"id": "chat-copy-04",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 111,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0357,
+				"answerConfidence": 0.339,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1612,
+					"kimi-k2.5-fast": 0.195,
+					"kimi-k2.6-code": 0.339,
+					"kimi-k3-flagship": 0.1647,
+					"kimi-vl-vision": 0.14
+				}
+			}
+		},
+		{
+			"id": "chat-copy-05",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 81,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 28,
+				"confidence": 0.0082,
+				"answerConfidence": 0.2518,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2518,
+					"kimi-k2.5-fast": 0.1983,
+					"kimi-k2.6-code": 0.2003,
+					"kimi-k3-flagship": 0.1492,
+					"kimi-vl-vision": 0.2004
+				}
+			}
+		},
+		{
+			"id": "chat-copy-06",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 116,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.049,
+				"answerConfidence": 0.2993,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1674,
+					"kimi-k2.5-fast": 0.2829,
+					"kimi-k2.6-code": 0.2993,
+					"kimi-k3-flagship": 0.0956,
+					"kimi-vl-vision": 0.1547
+				}
+			}
+		},
+		{
+			"id": "chat-copy-07",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 89,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 29,
+				"confidence": 0.0324,
+				"answerConfidence": 0.322,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.322,
+					"kimi-k2.5-fast": 0.1989,
+					"kimi-k2.6-code": 0.2008,
+					"kimi-k3-flagship": 0.1419,
+					"kimi-vl-vision": 0.1365
+				}
+			}
+		},
+		{
+			"id": "chat-copy-08",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 93,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 30,
+				"confidence": 0.0118,
+				"answerConfidence": 0.2744,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2744,
+					"kimi-k2.5-fast": 0.1979,
+					"kimi-k2.6-code": 0.1858,
+					"kimi-k3-flagship": 0.1545,
+					"kimi-vl-vision": 0.1875
+				}
+			}
+		},
+		{
+			"id": "chat-copy-09",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 72,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0325,
+				"answerConfidence": 0.3108,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1472,
+					"kimi-k2.5-fast": 0.2425,
+					"kimi-k2.6-code": 0.3108,
+					"kimi-k3-flagship": 0.1569,
+					"kimi-vl-vision": 0.1426
+				}
+			}
+		},
+		{
+			"id": "chat-copy-10",
+			"category": "chat-copy",
+			"expected": "kimi-k2.5-fast",
+			"vision": false,
+			"promptChars": 111,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0178,
+				"answerConfidence": 0.2752,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1498,
+					"kimi-k2.5-fast": 0.2157,
+					"kimi-k2.6-code": 0.2752,
+					"kimi-k3-flagship": 0.146,
+					"kimi-vl-vision": 0.2132
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-01",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 243,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 31,
+				"confidence": 0.0418,
+				"answerConfidence": 0.3451,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.3451,
+					"kimi-k2.5-fast": 0.1348,
+					"kimi-k2.6-code": 0.2131,
+					"kimi-k3-flagship": 0.155,
+					"kimi-vl-vision": 0.1521
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-02",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 158,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0134,
+				"answerConfidence": 0.2592,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2304,
+					"kimi-k2.5-fast": 0.1835,
+					"kimi-k2.6-code": 0.2592,
+					"kimi-k3-flagship": 0.1394,
+					"kimi-vl-vision": 0.1876
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-03",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 170,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0224,
+				"answerConfidence": 0.2873,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2057,
+					"kimi-k2.5-fast": 0.2201,
+					"kimi-k2.6-code": 0.2873,
+					"kimi-k3-flagship": 0.135,
+					"kimi-vl-vision": 0.1518
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-04",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 217,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 35,
+				"confidence": 0.016,
+				"answerConfidence": 0.2705,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2705,
+					"kimi-k2.5-fast": 0.1518,
+					"kimi-k2.6-code": 0.2086,
+					"kimi-k3-flagship": 0.2198,
+					"kimi-vl-vision": 0.1493
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-05",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 171,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0118,
+				"answerConfidence": 0.2363,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2203,
+					"kimi-k2.5-fast": 0.1862,
+					"kimi-k2.6-code": 0.2363,
+					"kimi-k3-flagship": 0.1326,
+					"kimi-vl-vision": 0.2245
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-06",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 168,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0118,
+				"answerConfidence": 0.2733,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1817,
+					"kimi-k2.5-fast": 0.1788,
+					"kimi-k2.6-code": 0.2733,
+					"kimi-k3-flagship": 0.208,
+					"kimi-vl-vision": 0.1582
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-07",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 214,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 29,
+				"confidence": 0.0207,
+				"answerConfidence": 0.2836,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1471,
+					"kimi-k2.5-fast": 0.1447,
+					"kimi-k2.6-code": 0.2264,
+					"kimi-k3-flagship": 0.1981,
+					"kimi-vl-vision": 0.2836
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-08",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 178,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0221,
+				"answerConfidence": 0.3121,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1693,
+					"kimi-k2.5-fast": 0.1759,
+					"kimi-k2.6-code": 0.3121,
+					"kimi-k3-flagship": 0.1801,
+					"kimi-vl-vision": 0.1626
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-09",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 218,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 33,
+				"confidence": 0.5472,
+				"answerConfidence": 0.8154,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.8154,
+					"kimi-k2.5-fast": 0.0307,
+					"kimi-k2.6-code": 0.0496,
+					"kimi-k3-flagship": 0.0424,
+					"kimi-vl-vision": 0.0619
+				}
+			}
+		},
+		{
+			"id": "deep-reasoning-10",
+			"category": "deep-reasoning",
+			"expected": "kimi-k1.6-reason",
+			"vision": false,
+			"promptChars": 216,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 33,
+				"confidence": 0.0371,
+				"answerConfidence": 0.3413,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.3413,
+					"kimi-k2.5-fast": 0.1497,
+					"kimi-k2.6-code": 0.1905,
+					"kimi-k3-flagship": 0.1396,
+					"kimi-vl-vision": 0.1789
+				}
+			}
+		},
+		{
+			"id": "long-context-01",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 150,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 30,
+				"confidence": 0.0049,
+				"answerConfidence": 0.238,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2137,
+					"kimi-k2.5-fast": 0.1884,
+					"kimi-k2.6-code": 0.1627,
+					"kimi-k3-flagship": 0.1972,
+					"kimi-vl-vision": 0.238
+				}
+			}
+		},
+		{
+			"id": "long-context-02",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 156,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 31,
+				"confidence": 0.0031,
+				"answerConfidence": 0.2372,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2372,
+					"kimi-k2.5-fast": 0.1793,
+					"kimi-k2.6-code": 0.2022,
+					"kimi-k3-flagship": 0.1856,
+					"kimi-vl-vision": 0.1958
+				}
+			}
+		},
+		{
+			"id": "long-context-03",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 148,
+			"laya": {
+				"model": "kimi-k1.6-reason",
+				"archetype": "kimi-k1.6-reason",
+				"latencyMs": 30,
+				"confidence": 0.036,
+				"answerConfidence": 0.3247,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.3247,
+					"kimi-k2.5-fast": 0.1904,
+					"kimi-k2.6-code": 0.2149,
+					"kimi-k3-flagship": 0.1255,
+					"kimi-vl-vision": 0.1446
+				}
+			}
+		},
+		{
+			"id": "long-context-04",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 170,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0101,
+				"answerConfidence": 0.2435,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1476,
+					"kimi-k2.5-fast": 0.1842,
+					"kimi-k2.6-code": 0.2435,
+					"kimi-k3-flagship": 0.2373,
+					"kimi-vl-vision": 0.1874
+				}
+			}
+		},
+		{
+			"id": "long-context-05",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 140,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0032,
+				"answerConfidence": 0.2329,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1731,
+					"kimi-k2.5-fast": 0.1988,
+					"kimi-k2.6-code": 0.2329,
+					"kimi-k3-flagship": 0.1857,
+					"kimi-vl-vision": 0.2094
+				}
+			}
+		},
+		{
+			"id": "long-context-06",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 127,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 31,
+				"confidence": 0.0023,
+				"answerConfidence": 0.2243,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1974,
+					"kimi-k2.5-fast": 0.1804,
+					"kimi-k2.6-code": 0.2243,
+					"kimi-k3-flagship": 0.2146,
+					"kimi-vl-vision": 0.1834
+				}
+			}
+		},
+		{
+			"id": "long-context-07",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 128,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 34,
+				"confidence": 0.0068,
+				"answerConfidence": 0.2381,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2099,
+					"kimi-k2.5-fast": 0.2196,
+					"kimi-k2.6-code": 0.2381,
+					"kimi-k3-flagship": 0.1582,
+					"kimi-vl-vision": 0.1743
+				}
+			}
+		},
+		{
+			"id": "long-context-08",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 160,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0217,
+				"answerConfidence": 0.3101,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1613,
+					"kimi-k2.5-fast": 0.1835,
+					"kimi-k2.6-code": 0.3101,
+					"kimi-k3-flagship": 0.1646,
+					"kimi-vl-vision": 0.1805
+				}
+			}
+		},
+		{
+			"id": "long-context-09",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 152,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 29,
+				"confidence": 0.0019,
+				"answerConfidence": 0.2215,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2068,
+					"kimi-k2.5-fast": 0.1753,
+					"kimi-k2.6-code": 0.1918,
+					"kimi-k3-flagship": 0.2047,
+					"kimi-vl-vision": 0.2215
+				}
+			}
+		},
+		{
+			"id": "long-context-10",
+			"category": "long-context",
+			"expected": "kimi-k3-flagship",
+			"vision": false,
+			"promptChars": 150,
+			"laya": {
+				"model": "kimi-vl-vision",
+				"archetype": "kimi-vl-vision",
+				"latencyMs": 30,
+				"confidence": 0.0008,
+				"answerConfidence": 0.2102,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2097,
+					"kimi-k2.5-fast": 0.1839,
+					"kimi-k2.6-code": 0.2042,
+					"kimi-k3-flagship": 0.192,
+					"kimi-vl-vision": 0.2102
+				}
+			}
+		},
+		{
+			"id": "vision-01",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 154,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0573,
+				"answerConfidence": 0.319,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2262,
+					"kimi-k2.5-fast": 0.2347,
+					"kimi-k2.6-code": 0.319,
+					"kimi-k3-flagship": 0.0782,
+					"kimi-vl-vision": 0.1419
+				}
+			}
+		},
+		{
+			"id": "vision-02",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 135,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0093,
+				"answerConfidence": 0.2614,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2026,
+					"kimi-k2.5-fast": 0.1996,
+					"kimi-k2.6-code": 0.2614,
+					"kimi-k3-flagship": 0.1809,
+					"kimi-vl-vision": 0.1555
+				}
+			}
+		},
+		{
+			"id": "vision-03",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 122,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.0492,
+				"answerConfidence": 0.2901,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2056,
+					"kimi-k2.5-fast": 0.2694,
+					"kimi-k2.6-code": 0.2901,
+					"kimi-k3-flagship": 0.0827,
+					"kimi-vl-vision": 0.1521
+				}
+			}
+		},
+		{
+			"id": "vision-04",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 127,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.0117,
+				"answerConfidence": 0.2602,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2232,
+					"kimi-k2.5-fast": 0.1946,
+					"kimi-k2.6-code": 0.2602,
+					"kimi-k3-flagship": 0.1478,
+					"kimi-vl-vision": 0.1743
+				}
+			}
+		},
+		{
+			"id": "vision-05",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 150,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.1249,
+				"answerConfidence": 0.474,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1594,
+					"kimi-k2.5-fast": 0.1579,
+					"kimi-k2.6-code": 0.474,
+					"kimi-k3-flagship": 0.0928,
+					"kimi-vl-vision": 0.1159
+				}
+			}
+		},
+		{
+			"id": "vision-06",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 108,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 29,
+				"confidence": 0.1429,
+				"answerConfidence": 0.4913,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.1568,
+					"kimi-k2.5-fast": 0.1578,
+					"kimi-k2.6-code": 0.4913,
+					"kimi-k3-flagship": 0.0765,
+					"kimi-vl-vision": 0.1177
+				}
+			}
+		},
+		{
+			"id": "vision-07",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 135,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0541,
+				"answerConfidence": 0.2965,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.2469,
+					"kimi-k2.5-fast": 0.2408,
+					"kimi-k2.6-code": 0.2965,
+					"kimi-k3-flagship": 0.0809,
+					"kimi-vl-vision": 0.135
+				}
+			}
+		},
+		{
+			"id": "vision-08",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 151,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 32,
+				"confidence": 0.0638,
+				"answerConfidence": 0.3577,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.192,
+					"kimi-k2.5-fast": 0.2011,
+					"kimi-k2.6-code": 0.3577,
+					"kimi-k3-flagship": 0.0761,
+					"kimi-vl-vision": 0.1731
+				}
+			}
+		},
+		{
+			"id": "vision-09",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 125,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 28,
+				"confidence": 0.0542,
+				"answerConfidence": 0.306,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.227,
+					"kimi-k2.5-fast": 0.2456,
+					"kimi-k2.6-code": 0.306,
+					"kimi-k3-flagship": 0.0796,
+					"kimi-vl-vision": 0.1417
+				}
+			}
+		},
+		{
+			"id": "vision-10",
+			"category": "vision",
+			"expected": "kimi-vl-vision",
+			"vision": true,
+			"promptChars": 128,
+			"laya": {
+				"model": "kimi-k2.6-code",
+				"archetype": "kimi-k2.6-code",
+				"latencyMs": 30,
+				"confidence": 0.071,
+				"answerConfidence": 0.3697,
+				"checkpoint": "convaiinnovations/laya",
+				"probabilities": {
+					"kimi-k1.6-reason": 0.216,
+					"kimi-k2.5-fast": 0.2045,
+					"kimi-k2.6-code": 0.3697,
+					"kimi-k3-flagship": 0.0933,
+					"kimi-vl-vision": 0.1165
+				}
+			}
+		}
+	]
+}

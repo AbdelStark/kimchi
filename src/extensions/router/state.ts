@@ -45,24 +45,30 @@ export function clearAutoRoutingState(sessionId: string): void {
 }
 
 /**
- * Pi restores the model recorded on the last assistant message. Auto messages
- * name their concrete target, so use explicit selection entries and Auto's
- * persisted state to recover the user-facing model instead.
+ * Pi restores the model recorded on the last assistant message. Routed virtual
+ * models (Auto, Laya, …) name their concrete target on assistant messages, so
+ * use explicit resolution entries and the persisted routing state to recover
+ * the user-facing model instead.
  */
-export function sessionSelectsAuto(entries: readonly SessionEntry[]): boolean {
+export function sessionSelectsRoutedVirtualModel(
+	entries: readonly SessionEntry[],
+	resolutionEntryType: string,
+	isVirtualModel: (model: Pick<Model<string>, "provider" | "id">) => boolean,
+): boolean {
 	let selected = false
 	for (const entry of entries) {
-		if (
-			entry.type === "custom" &&
-			entry.customType === AUTO_RESOLUTION_ENTRY &&
-			isPersistedAutoResolution(entry.data)
-		) {
+		if (entry.type === "custom" && entry.customType === resolutionEntryType && isPersistedAutoResolution(entry.data)) {
 			selected = true
 		} else if (entry.type === "model_change") {
-			selected = isAutoModel({ provider: entry.provider, id: entry.modelId })
+			selected = isVirtualModel({ provider: entry.provider, id: entry.modelId })
 		}
 	}
 	return selected
+}
+
+/** Whether a session's entry history selects the v1 Auto router. */
+export function sessionSelectsAuto(entries: readonly SessionEntry[]): boolean {
+	return sessionSelectsRoutedVirtualModel(entries, AUTO_RESOLUTION_ENTRY, isAutoModel)
 }
 
 type EffectiveModelContext<TApi extends string> = Pick<ExtensionContext, "sessionManager"> & {
@@ -165,15 +171,26 @@ export function isPersistedAutoResolution(data: unknown): data is PersistedAutoR
 	)
 }
 
-export function hydrateAutoRoutingState(
+/**
+ * Hydrate a routed virtual model's per-session state from its persisted
+ * resolution entry. `resolutionEntryType` selects which custom entry type
+ * stores the pick (Auto and Laya keep separate entries); `requestedId`, when
+ * passed, is stamped on the resolved state so `resolveEffectiveModel` only
+ * resolves when the current model is that virtual model. The v1 Auto path
+ * omits `requestedId` on purpose: legacy persisted resolutions predate it and
+ * fall back to `isAutoModel`.
+ */
+export function hydrateRoutingResolution(
 	sessionId: string,
 	entries: readonly SessionEntry[],
 	modelRegistry: Pick<ModelRegistry, "find" | "getAvailable">,
+	resolutionEntryType: string,
+	requestedId?: string,
 ): AutoRoutingState {
 	const entry = entries.findLast(
 		(candidate) =>
 			candidate.type === "custom" &&
-			candidate.customType === AUTO_RESOLUTION_ENTRY &&
+			candidate.customType === resolutionEntryType &&
 			isPersistedAutoResolution(candidate.data),
 	)
 	const data = entry?.type === "custom" ? entry.data : undefined
@@ -184,10 +201,22 @@ export function hydrateAutoRoutingState(
 			.getAvailable()
 			.some((candidate) => candidate.provider === data.provider && candidate.id === data.modelId)
 		state =
-			model && available ? { status: "resolved", model } : { status: "failed", reason: "unavailable_recommendation" }
+			model && available
+				? requestedId === undefined
+					? { status: "resolved", model }
+					: { status: "resolved", model, requestedId }
+				: { status: "failed", reason: "unavailable_recommendation" }
 	}
 	stateBySession.set(sessionId, state)
 	return state
+}
+
+export function hydrateAutoRoutingState(
+	sessionId: string,
+	entries: readonly SessionEntry[],
+	modelRegistry: Pick<ModelRegistry, "find" | "getAvailable">,
+): AutoRoutingState {
+	return hydrateRoutingResolution(sessionId, entries, modelRegistry, AUTO_RESOLUTION_ENTRY)
 }
 
 export function resolvedEntry(model: Pick<Model<string>, "provider" | "id">): PersistedAutoResolution {

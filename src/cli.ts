@@ -126,6 +126,8 @@ import reviewWriteGuardExtension from "./extensions/review-write-guard.js"
 import { installAutoModelAdapters } from "./extensions/router/adapters.js"
 import { shouldDefaultToAuto, warmAutoDefaultGate } from "./extensions/router/auto-default-gate.js"
 import autoModelExtension from "./extensions/router/index.js"
+import layaModelExtension from "./extensions/router-laya/index.js"
+import { installLayaModelDiscoveryAdapter } from "./extensions/router-laya/model-discovery.js"
 import sessionMetadataExtension from "./extensions/session-metadata/index.js"
 import sessionNameExtension from "./extensions/session-name.js"
 import orphanToolResultRepairExtension from "./extensions/session-repair/orphan-tool-result-repair.js"
@@ -164,6 +166,7 @@ import {
 import {
 	injectAutoModel,
 	injectExperimentalProvider,
+	injectLayaModel,
 	isTransientModelsError,
 	readExperimentalModels,
 	updateModelsConfig,
@@ -359,6 +362,7 @@ try {
 		// args that reach main(), so pi.getFlag can't discover it.
 		setExperimentalFeaturesEnabled(experimentalFeatures)
 		installAutoModelAdapters()
+		installLayaModelDiscoveryAdapter()
 		// Kick off the /v1/me identity lookup now (result cached process-wide) so
 		// the Auto-discovery filter and the fresh-session default gate never wait
 		// on the network in render paths.
@@ -454,6 +458,7 @@ try {
 					models = [...models, ...readExperimentalModels(modelsJsonPath)]
 				}
 				injectAutoModel(modelsJsonPath)
+				injectLayaModel(modelsJsonPath)
 				// Auto-discover a local Ollama server and merge its models into the
 				// registry. Probe is silent on failure — startup is never blocked.
 				await injectOllamaProvider(modelsJsonPath, resolveOllamaHost())
@@ -485,6 +490,7 @@ try {
 					models = [...models, ...readExperimentalModels(modelsJsonPath)]
 				}
 				injectAutoModel(modelsJsonPath)
+				injectLayaModel(modelsJsonPath)
 				await injectOllamaProvider(modelsJsonPath, resolveOllamaHost())
 				models = [...models, ...readOllamaModelMetadata(modelsJsonPath)]
 			} else if (isTransientModelsError(err)) {
@@ -742,6 +748,9 @@ try {
 			questionnaireExtension,
 			// Resolve kimchi-dev/auto before prompt construction needs concrete model behavior.
 			autoModelExtension,
+			// Resolve kimchi-dev/laya (experimental System 1 router) alongside Auto;
+			// the two virtual routers share the routing-attempt plumbing.
+			layaModelExtension,
 			// Backend-routed virtual models (`auto-beta`, future backend-owned `auto`)
 			// learn + display the concrete pick and re-sync capabilities.
 			autoModelRoutingExtension,

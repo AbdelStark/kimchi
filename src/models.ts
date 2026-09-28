@@ -6,6 +6,7 @@ import type { ProviderConfig } from "@earendil-works/pi-coding-agent"
 import { resolveEndpoints } from "./config.js"
 import { clearCredentialStale, isAuthRejectedMessage, markCredentialStale } from "./credential-staleness.js"
 import { AUTO_MODEL_API, AUTO_MODEL_ID, AUTO_MODEL_PI_NAME } from "./extensions/router/constants.js"
+import { isLayaModel, LAYA_MODEL_API, LAYA_MODEL_ID, LAYA_MODEL_PI_NAME } from "./extensions/router-laya/constants.js"
 import { KIMCHI_PROVIDER_ID } from "./kimchi-provider.js"
 import { deriveDeprecationState, type ModelAlternative, writeModelDeprecations } from "./model-deprecation.js"
 import { getVersion } from "./utils.js"
@@ -199,6 +200,30 @@ export interface PiModelConfig {
 	headers?: Record<string, string>
 }
 
+/**
+ * The experimental laya System 1 router's virtual-model config. Derives the
+ * same capability envelope as Auto (reasoning control, minima across the
+ * available concrete models) — the two virtual routers are interchangeable
+ * from Pi's perspective; the kimchi-laya provider decides per prompt.
+ */
+export function layaModelConfig(models: ModelMetadata[]): PiModelConfig {
+	const rootModels = models.filter((model) => model.provider === "ai-enabler")
+	const contextWindow = Math.min(...rootModels.map((model) => model.limits.context_window), 128_000)
+	const maxTokens = Math.min(...rootModels.map((model) => model.limits.max_output_tokens), 16_384)
+	return {
+		id: LAYA_MODEL_ID,
+		name: LAYA_MODEL_PI_NAME,
+		api: LAYA_MODEL_API,
+		provider: "ai-enabler",
+		reasoning: true,
+		thinkingLevelMap: { off: "none", max: "max" },
+		input: ["text", "image"],
+		contextWindow,
+		maxTokens,
+		cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+	}
+}
+
 export function autoModelConfig(models: ModelMetadata[]): PiModelConfig {
 	const rootModels = models.filter((model) => model.provider === "ai-enabler")
 	const contextWindow = Math.min(...rootModels.map((model) => model.limits.context_window), 128_000)
@@ -343,7 +368,7 @@ function readCachedMetadata(modelsJsonPath: string): ModelMetadata[] | undefined
 			if (!name.startsWith("kimchi-dev")) continue
 			const models = (provider as { models?: PiModelConfig[] }).models
 			if (!Array.isArray(models) || models.length === 0) continue
-			result.push(...models.filter((model) => model.id !== AUTO_MODEL_ID).map(modelToMetadata))
+			result.push(...models.filter((model) => model.id !== AUTO_MODEL_ID && !isLayaModel(model)).map(modelToMetadata))
 		}
 		if (result.length === 0) return undefined
 		return result
@@ -434,6 +459,31 @@ export function injectAutoModel(modelsJsonPath: string): void {
 	if (!kimchiDev.models.some((model) => model.id === AUTO_MODEL_ID)) {
 		const concreteMetadata = kimchiDev.models.filter((model) => model.id !== AUTO_MODEL_ID).map(modelToMetadata)
 		kimchiDev.models = [...kimchiDev.models, autoModelConfig(concreteMetadata)]
+	}
+	writeFileSync(modelsJsonPath, JSON.stringify(config, null, "\t"), "utf-8")
+}
+
+/**
+ * Upsert the virtual kimchi-dev/laya model alongside Auto. Always present so
+ * saved sessions/defaults remain restorable; the experimental flag is the
+ * only thing controlling discovery-surface exposure (see model-discovery.ts).
+ */
+export function injectLayaModel(modelsJsonPath: string): void {
+	if (!existsSync(modelsJsonPath)) return
+	let config: { providers?: Record<string, { models?: PiModelConfig[] }> }
+	try {
+		config = JSON.parse(readFileSync(modelsJsonPath, "utf-8"))
+	} catch {
+		return
+	}
+	const kimchiDev = config.providers?.["kimchi-dev"]
+	if (!kimchiDev || !Array.isArray(kimchiDev.models)) return
+	// A backend-owned `laya` entry wins, exactly like the Auto normalization.
+	if (!kimchiDev.models.some((model) => model.id === LAYA_MODEL_ID)) {
+		const concreteMetadata = kimchiDev.models
+			.filter((model) => model.id !== AUTO_MODEL_ID && model.id !== LAYA_MODEL_ID)
+			.map(modelToMetadata)
+		kimchiDev.models = [...kimchiDev.models, layaModelConfig(concreteMetadata)]
 	}
 	writeFileSync(modelsJsonPath, JSON.stringify(config, null, "\t"), "utf-8")
 }
